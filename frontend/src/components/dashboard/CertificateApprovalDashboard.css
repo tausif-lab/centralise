@@ -1,0 +1,67 @@
+.certificate-approval-dashboard { padding: 24px; }
+.dashboard-header { margin-bottom: 24px; }
+.dashboard-header h2 { color: #333; font-size: 28px; margin-bottom: 8px; }
+.dashboard-header p { color: #666; font-size: 14px; }
+.statistics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; }
+.stat-label { color: #999; font-size: 12px; font-weight: 500; text-transform: uppercase; margin-bottom: 8px; }
+.stat-value { color: #333; font-size: 28px; font-weight: 600; }
+.stat-pending { border-left: 4px solid #ff9800; }
+.stat-approved { border-left: 4px solid #4CAF50; }
+.stat-rejected { border-left: 4px solid #f44336; }
+.loading { text-align: center; padding: 40px 20px; color: #999; }
+.empty-state { text-align: center; padding: 40px 20px; background: #f9f9f9; border-radius: 8px; color: #999; }
+.certificates-list { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+.certificates-list h3 { margin-bottom: 16px; color: #333; font-size: 18px; }
+.certificates-table { width: 100%; border-collapse: collapse; }
+.certificates-table thead { background-color: #f5f5f5; }
+.certificates-table th { padding: 12px; text-align: left; font-weight: 500; color: #666; font-size: 13px; text-transform: uppercase; }
+.certificates-table td { padding: 12px; border-bottom: 1px solid #eee; color: #333; }
+.certificates-table tbody tr:hover { background-color: #f9f9f9; }
+.btn-view { padding: 6px 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; transition: background-color 0.3s; }
+.btn-view:hover { background-color: #0b7dda; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; }
+.modal-header h3 { margin: 0; color: #333; font-size: 18px; }
+.btn-close { background: none; border: none; font-size: 28px; cursor: pointer; color: #999; transition: color 0.3s; }
+.btn-close:hover { color: #333; }
+.modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+.cert-details { margin-bottom: 20px; }
+.detail-row { display: flex; gap: 12px; margin-bottom: 12px; font-size: 14px; }
+.detail-row .label { font-weight: 500; color: #666; min-width: 100px; }
+.detail-row .value { color: #333; }
+.cert-preview { margin-bottom: 20px; }
+.cert-preview h4 { margin: 0 0 12px 0; color: #333; font-size: 14px; }
+.cert-image { max-width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd; }
+.btn-open-pdf { display: inline-block; padding: 10px 16px; background-color: #f44336; color: white; border-radius: 4px; text-decoration: none; font-size: 14px; transition: background-color 0.3s; }
+.btn-open-pdf:hover { background-color: #da190b; }
+.hash-info { background: #f5f5f5; padding: 12px; border-radius: 4px; margin-top: 16px; }
+.hash-info h4 { margin: 0 0 8px 0; color: #333; font-size: 13px; text-transform: uppercase; }
+.hash-value { display: flex; flex-direction: column; gap: 4px; }
+.hash-value small { color: #999; font-size: 11px; }
+.hash-value code { background: white; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; color: #666; overflow-x: auto; word-break: break-all; }
+.modal-footer { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 12px; justify-content: flex-end; }
+.btn { padding: 10px 16px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; transition: all 0.3s; }
+.btn-approve { background-color: #4CAF50; color: white; }
+.btn-approve:hover { background-color: #45a049; }
+.btn-reject { background-color: #f44336; color: white; }
+.btn-reject:hover { background-color: #da190b; }
+.btn-confirm { background-color: #4CAF50; color: white; }
+.btn-confirm:hover:not(:disabled) { background-color: #45a049; }
+.btn-confirm:disabled { background-color: #ccc; cursor: not-allowed; }
+.btn-cancel { background-color: #999; color: white; }
+.btn-cancel:hover { background-color: #777; }
+.action-confirmation { display: flex; flex-direction: column; gap: 12px; }
+.action-confirmation p { margin: 0; color: #666; font-size: 14px; }
+.reject-reason { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 14px; resize: vertical; min-height: 80px; }
+.alert { padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; font-size: 14px; }
+.alert-error { background-color: #ffebee; color: #c62828; border-left: 4px solid #c62828; }
+@media (max-width: 768px) {
+    .certificate-approval-dashboard { padding: 16px; }
+    .statistics { grid-template-columns: repeat(2, 1fr); }
+    .modal-content { width: 95%; max-height: 95vh; }
+    .certificates-table { font-size: 12px; }
+    .certificates-table th, .certificates-table td { padding: 8px; }
+    .modal-footer { flex-wrap: wrap; }
+}

@@ -1,0 +1,753 @@
+/* Verification Container Styles */
+.verification-container,
+.verification-status-container {
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  min-height: 400px;
+}
+
+.verification-header,
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.verification-header h2,
+.status-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.stats,
+.status-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.stat-badge,
+.stat {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-badge.pending,
+.stat.pending {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.stat.approved {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.stat.rejected {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.stat.total {
+  background: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d6d8db;
+}
+
+/* Grid Layouts */
+.requests-grid,
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Request Card Styles */
+.request-card,
+.status-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.request-card:hover,
+.status-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.status-card.approved {
+  border-left: 4px solid #28a745;
+}
+
+.status-card.rejected {
+  border-left: 4px solid #dc3545;
+}
+
+.status-card.pending {
+  border-left: 4px solid #ffc107;
+}
+
+.card-header {
+  padding: 16px;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.category-badge {
+  padding: 6px 12px;
+  background: #e7f3ff;
+  color: #0066cc;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.status-icon.approved {
+  color: #28a745;
+}
+
+.status-icon.rejected {
+  color: #dc3545;
+}
+
+.status-icon.pending {
+  color: #ffc107;
+}
+
+.status-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.status-text.approved {
+  color: #28a745;
+}
+
+.status-text.rejected {
+  color: #dc3545;
+}
+
+.status-text.pending {
+  color: #ffc107;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Card Body */
+.card-body {
+  padding: 16px;
+  flex-grow: 1;
+}
+
+.activity-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.info-row svg {
+  color: #0066cc;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.label {
+  font-weight: 600;
+  color: #555;
+  min-width: 80px;
+}
+
+.value {
+  color: #333;
+}
+
+.info-item {
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.description {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-left: 3px solid #0066cc;
+  border-radius: 4px;
+}
+
+.description p,
+.description-text p {
+  margin: 8px 0 0 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.certificate-link,
+.certificate-section {
+  margin-top: 12px;
+}
+
+.view-certificate-btn,
+.view-cert-link,
+.preview-link,
+.cert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #0066cc;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.view-certificate-btn:hover,
+.view-cert-link:hover,
+.preview-link:hover,
+.cert-link:hover {
+  background: #0052a3;
+}
+
+/* Card Footer */
+.card-footer {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.detail-btn,
+.details-btn {
+  width: 100%;
+  padding: 10px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.3s ease;
+}
+
+.detail-btn:hover,
+.details-btn:hover {
+  background: #0052a3;
+}
+
+/* Faculty Info Styles */
+.faculty-info {
+  margin-top: 12px;
+  padding: 12px;
+  background: #d4edda;
+  border-left: 3px solid #28a745;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.faculty-info.approved-by {
+  color: #155724;
+}
+
+.faculty-details {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faculty-details .name {
+  font-weight: 600;
+}
+
+.faculty-details .role,
+.faculty-details .approval-date {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Rejection Info */
+.rejection-info {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8d7da;
+  border-left: 3px solid #dc3545;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #721c24;
+}
+
+.rejection-info .reason {
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content,
+.details-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.activity-info {
+  margin-bottom: 24px;
+}
+
+.activity-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+}
+
+.student-info,
+.category-info,
+.date-info {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.student-info strong,
+.category-info strong,
+.date-info strong {
+  font-weight: 600;
+}
+
+.description-box,
+.reason-box {
+  padding: 12px;
+  background: #f8f9fa;
+  border-left: 3px solid #0066cc;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.description-box p,
+.reason-box p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.cert-preview {
+  margin-top: 12px;
+}
+
+/* Action Section */
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.approval-section,
+.rejection-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.approval-section label,
+.rejection-section label {
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.icon-approve {
+  color: #28a745;
+}
+
+.icon-reject {
+  color: #dc3545;
+}
+
+.notes-textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.approve-btn,
+.reject-btn,
+.cancel-btn,
+.close-btn-footer {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.approve-btn {
+  background: #28a745;
+  color: white;
+}
+
+.approve-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.approve-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.reject-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-btn,
+.close-btn-footer {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover,
+.close-btn-footer:hover {
+  background: #5a6268;
+}
+
+/* Detail Section */
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-item strong {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.detail-item p {
+  color: #555;
+  margin: 0;
+}
+
+.status-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.faculty-section,
+.rejection-details,
+.cert-details {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.faculty-section strong,
+.rejection-details strong,
+.cert-details strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.inline-icon {
+  margin-right: 4px;
+}
+
+.faculty-card {
+  margin-top: 8px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+}
+
+.faculty-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.faculty-info-row:last-child {
+  border-bottom: none;
+}
+
+.faculty-info-row .label {
+  font-weight: 600;
+  color: #555;
+}
+
+.faculty-info-row .value {
+  color: #0066cc;
+}
+
+.category-tag {
+  font-size: 12px;
+  font-weight: 600;
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-state svg {
+  width: 80px;
+  height: 80px;
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.empty-state .hint {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .verification-container,
+  .verification-status-container {
+    padding: 16px;
+  }
+
+  .verification-header,
+  .status-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .stats,
+  .status-stats {
+    width: 100%;
+  }
+
+  .requests-grid,
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content,
+  .details-modal {
+    max-height: 90vh;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .approve-btn,
+  .reject-btn,
+  .cancel-btn,
+  .close-btn-footer {
+    width: 100%;
+  }
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .close-btn {
+    align-self: flex-end;
+    margin-top: -40px;
+  }
+}

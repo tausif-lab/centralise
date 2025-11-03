@@ -1,0 +1,398 @@
+/* src/styles/sections/certificates.css */
+.certificate-section {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header > div h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.section-header > div p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.upload-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.upload-form-card {
+  background: var(--bg-tertiary);
+  padding: 24px;
+  margin: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.upload-form-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  transition: var(--transition);
+  cursor: pointer;
+  background: var(--bg-primary);
+  margin-bottom: 20px;
+}
+
+.upload-area:hover,
+.upload-area.active {
+  border-color: var(--primary-color);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-label svg {
+  color: var(--primary-color);
+}
+
+.upload-label h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.upload-label p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 14px;
+}
+
+.file-selected {
+  color: var(--success-color) !important;
+  font-weight: 600;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.form-actions .submit-btn {
+  background: var(--success-color);
+  color: white;
+}
+
+.form-actions .submit-btn:hover:not(:disabled) {
+  background: #059669;
+}
+
+.form-actions .submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-actions .cancel-btn {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.form-actions .cancel-btn:hover {
+  background: #d1d5db;
+}
+
+.certificates-grid {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.certificate-card {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.certificate-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.certificate-card.approved {
+  border-color: var(--success-color);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.certificate-card.pending {
+  border-color: var(--warning-color);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.certificate-card.rejected {
+  border-color: var(--danger-color);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.certificate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.status-section {
+  display: flex;
+  gap: 12px;
+}
+
+.status-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.status-icon.approved {
+  background: var(--success-color);
+}
+
+.status-icon.pending {
+  background: var(--warning-color);
+}
+
+.status-icon.rejected {
+  background: var(--danger-color);
+}
+
+.status-section > div h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.issuer {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.approved {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color);
+}
+
+.status-badge.rejected {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+}
+
+.certificate-details {
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 12px;
+}
+
+.upload-date {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.rejection-reason {
+  font-size: 13px;
+  color: var(--danger-color);
+  margin: 8px 0 0 0;
+}
+
+.certificate-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.certificate-actions.two-col {
+  grid-template-columns: 1fr;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.action-btn.view-btn {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+}
+
+.action-btn.view-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.action-btn.download-btn {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+}
+
+.action-btn.download-btn:hover {
+  background: var(--success-color);
+  color: white;
+}
+
+.action-btn.reupload-btn {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color);
+  grid-column: 1 / -1;
+}
+
+.action-btn.reupload-btn:hover {
+  background: var(--warning-color);
+  color: white;
+}
+
+.action-btn.delete-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+  grid-column: 1 / -1;
+}
+
+.action-btn.delete-btn:hover {
+  background: var(--danger-color);
+  color: white;
+}
+
+.empty-state {
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .certificates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group:nth-child(3) {
+    grid-column: 1;
+  }
+}

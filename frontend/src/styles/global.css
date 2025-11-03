@@ -1,0 +1,375 @@
+/* ============================================ */
+/* PROFESSIONAL BLUE & WHITE THEME */
+/* ============================================ */
+/*
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}*/
+
+/* ============================================ */
+/* SCROLLBAR - Subtle Blue */
+/* ============================================ */
+/*
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}*/
+
+/*============================================ */
+/* SMOOTH ANIMATIONS */
+/* ============================================ *
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Subtle pulse for notifications *
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================ */
+/* SPACING UTILITIES */
+/* ============================================ *
+
+.section-spacing {
+  margin-bottom: 2rem;
+}
+
+.card-spacing {
+  margin-bottom: 1.5rem;
+}
+
+.content-padding {
+  padding: 1.5rem;
+}
+
+/* ============================================ */
+/* GLASS EFFECT - Subtle */
+/* ============================================ *
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+
+
+
+
+
+
+
+
+
+/* ============================================ */
+/* ENHANCED SPACING FOR FULL SCREEN */
+/* ============================================ *
+
+.section-spacing-lg {
+  margin-bottom: 3rem;
+}
+
+.card-spacing-lg {
+  margin-bottom: 2rem;
+}
+
+.content-padding-lg {
+  padding: 2rem;
+}
+
+/* Better responsive padding *
+@media (min-width: 1024px) {
+  .section-spacing-lg {
+    margin-bottom: 4rem;
+  }
+  
+  .card-spacing-lg {
+    margin-bottom: 2.5rem;
+  }
+  
+  .content-padding-lg {
+    padding: 2.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .section-spacing-lg {
+    margin-bottom: 5rem;
+  }
+  
+  .card-spacing-lg {
+    margin-bottom: 3rem;
+  }
+  
+  .content-padding-lg {
+    padding: 3rem;
+  }
+}
+
+/* Add breathing room to grids *
+.grid-spacing-comfortable {
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-spacing-comfortable {
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .grid-spacing-comfortable {
+    gap: 3rem;
+  }
+}
+*/
+
+
+
+
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================ */
+/* SCROLLBAR - Subtle Blue */
+/* ============================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ============================================ */
+/* SMOOTH ANIMATIONS */
+/* ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Subtle pulse for notifications */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================ */
+/* SPACING UTILITIES */
+/* ============================================ */
+
+.section-spacing {
+  margin-bottom: 2rem;
+}
+
+.card-spacing {
+  margin-bottom: 1.5rem;
+}
+
+.content-padding {
+  padding: 1.5rem;
+}
+
+/* ============================================ */
+/* GLASS EFFECT - Subtle */
+/* ============================================ */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* ============================================ */
+/* ENHANCED SPACING FOR FULL SCREEN */
+/* ============================================ */
+
+.section-spacing-lg {
+  margin-bottom: 3rem;
+}
+
+.card-spacing-lg {
+  margin-bottom: 2rem;
+}
+
+.content-padding-lg {
+  padding: 2rem;
+}
+
+/* Better responsive padding */
+@media (min-width: 1024px) {
+  .section-spacing-lg {
+    margin-bottom: 4rem;
+  }
+  
+  .card-spacing-lg {
+    margin-bottom: 2.5rem;
+  }
+  
+  .content-padding-lg {
+    padding: 2.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .section-spacing-lg {
+    margin-bottom: 5rem;
+  }
+  
+  .card-spacing-lg {
+    margin-bottom: 3rem;
+  }
+  
+  .content-padding-lg {
+    padding: 3rem;
+  }
+}
+
+/* Add breathing room to grids */
+.grid-spacing-comfortable {
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-spacing-comfortable {
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .grid-spacing-comfortable {
+    gap: 3rem;
+  }
+}
