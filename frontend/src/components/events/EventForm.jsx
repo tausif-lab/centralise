@@ -235,32 +235,33 @@ const EventForm = ({ onSubmit, initialData = null, selectedDate }) => {
       </div>
 
       {/* File Uploads */}
-      <div className="space-y-4 border-t pt-6">
-        <h3 className="text-lg font-semibold text-gray-900">Event Documents & Images</h3>
-        
-        <FileUpload
-          label="Notice File (PDF, DOC, DOCX)"
-          accept=".pdf,.doc,.docx"
-          onChange={(files) => handleFileChange('noticeFile', files)}
-          required={false}
-        />
+      {/* File Uploads */}
+<div className="space-y-4 border-t pt-6">
+  <h3 className="text-lg font-semibold text-gray-900">Event Documents & Images</h3>
+  
+  <FileUpload
+    label="Notice File (PDF or Image)" 
+    accept=".pdf,.jpg,.jpeg,.png,.gif"  
+    onChange={(files) => handleFileChange('noticeFile', files)}
+    required={false}
+  />
 
-        <FileUpload
-          label="Attendance Sheet (Excel, PDF)"
-          accept=".xlsx,.xls,.pdf"
-          onChange={(files) => handleFileChange('attendanceSheet', files)}
-          required={false}
-        />
+  <FileUpload
+    label="Attendance Sheet (PDF, Excel or Image)"  
+    accept=".xlsx,.xls,.pdf,.jpg,.jpeg,.png,.gif"  
+    onChange={(files) => handleFileChange('attendanceSheet', files)}
+    required={false}
+  />
 
-        <FileUpload
-          label="Event Photos (1-3 images)"
-          accept="image/jpeg,image/jpg,image/png,image/gif"
-          multiple
-          maxFiles={3}
-          onChange={(files) => handleFileChange('photos', files)}
-          required={false}
-        />
-      </div>
+  <FileUpload
+    label="Event Photos (1-3 images)"
+    accept="image/jpeg,image/jpg,image/png,image/gif"
+    multiple
+    maxFiles={3}
+    onChange={(files) => handleFileChange('photos', files)}
+    required={false}
+  />
+</div>
 
       {/* Event Report */}
       <div>

@@ -38,6 +38,9 @@ import Register from './pages/Register';
 import './App.css';
 import './styles/global.css';
 import Login from './pages/Login';
+import Admindashboard from './pages/AdminDashboard';  
+import ProfileReview  from './pages/ProfileReview';
+import '../src/App.css'
 /*import Landing from './pages/Landing'*/
 
 // Login Component
@@ -156,7 +159,10 @@ function App() {
         
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+         <Route path="/ProfileReview" element={<ProfileReview />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+        <Route path="/admin-dashboard" element={<Admindashboard />} />
+        <Route path="/dashboard/:userId" element={<StudentDashboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

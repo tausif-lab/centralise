@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Add this import
+
 const Login = () => {
-  const navigate = useNavigate(); // Add this hook
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -9,25 +8,30 @@ const Login = () => {
     facultyInchargeType: "",
   });
 
+  const [message, setMessage] = useState({ type: null, text: "" });
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage({ type: null, text: "" });
 
-    // Validation for students
+    // Validation for required fields
     if (!formData.email || !formData.password || !formData.role) {
-      alert("Please fill all required fields");
+      setMessage({ type: "error", text: "Please fill all required fields" });
+      setIsLoading(false);
       return;
     }
 
     // Validation for Faculty Incharge
     if (formData.role === "FacultyIncharge" && !formData.facultyInchargeType) {
-      alert("Please select Faculty Incharge area");
+      setMessage({ type: "error", text: "Please select Faculty Incharge area" });
+      setIsLoading(false);
       return;
     }
 
@@ -47,25 +51,39 @@ const Login = () => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         
-        alert('Login Successful!');
+        setMessage({ 
+          type: "success", 
+          text: 'Login Successful! Redirecting...' 
+        });
         
-        // Navigate based on role
-        if (data.user.role === 'student') {
-          navigate(`/StudentDashboard?collegeId=${data.user.collegeId}&userId=${data.user.id}&branch=${data.user.branch}`);
-        } else if (data.user.role === 'FacultyIncharge') {
-          navigate(`/teacher-dashboard?collegeId=${data.user.collegeId}&userId=${data.user.id}&facultyInchargeType=${data.user.facultyInchargeType}`);
-        }
+        // Redirect based on redirectUrl from backend
+        setTimeout(() => {
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else if (data.user.role === 'admin') {
+            window.location.href = '/admin-dashboard';
+          } else if (data.user.role === 'student') {
+            window.location.href = `/dashboard/${data.user.user1Id}`;
+          } else if (data.user.role === 'FacultyIncharge') {
+            window.location.href = `/teacher-dashboard?collegeId=${data.user.collegeId}&userId=${data.user.user1Id}&facultyInchargeType=${data.user.facultyInchargeType}`;
+          }
+        }, 1000);
       } else {
-        alert(data.message || 'Login failed');
+        setMessage({ type: "error", text: data.message || 'Login failed' });
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('An error occurred during login. Please try again.');
+      setMessage({ 
+        type: "error", 
+        text: 'An error occurred during login. Please try again.' 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 py-12">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md space-y-4"
@@ -73,6 +91,17 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Login
         </h2>
+
+        {/* Message Display */}
+        {message.text && (
+          <div className={`p-3 rounded-lg ${
+            message.type === 'success'
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-800 border border-red-200'
+          }`}>
+            {message.text}
+          </div>
+        )}
 
         {/* Email */}
         <div>
@@ -115,6 +144,7 @@ const Login = () => {
             <option value="">Select Role</option>
             <option value="student">Student</option>
             <option value="FacultyIncharge">Faculty Incharge</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
@@ -145,10 +175,23 @@ const Login = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+          disabled={isLoading}
+          className={`w-full text-white py-2 rounded-lg transition duration-300 font-medium ${
+            isLoading 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
         >
-          Login
+          {isLoading ? 'Logging in...' : 'Login'}
         </button>
+
+        {/* Register Link */}
+        <p className="text-center text-gray-600 text-sm">
+          Don't have an account?{' '}
+          <a href="/register" className="text-blue-600 hover:underline">
+            Register here
+          </a>
+        </p>
       </form>
     </div>
   );

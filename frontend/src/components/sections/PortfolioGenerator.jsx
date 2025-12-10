@@ -1,61 +1,100 @@
 // src/components/sections/PortfolioGenerator.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, QrCode, Download, Eye, Loader } from 'lucide-react';
 import '../../styles/sections/portfolio.css';
 
 const PortfolioGenerator = () => {
   const [activeTab, setActiveTab] = useState('generate');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [portfolioData] = useState({
-    name: 'Sarah Johnson',
-    role: 'Full Stack Developer',
-    bio: 'Passionate about building scalable web applications',
-    email: 'sarah.johnson@student.com',
-    phone: '+91 98765 43210',
-    location: 'Bangalore, India',
-    projects: [
-      { title: 'E-Commerce Platform', description: 'React + Node.js + MongoDB' },
-      { title: 'Task Management App', description: 'React Native application' }
-    ],
-    skills: ['React', 'Node.js', 'Python', 'Machine Learning'],
-    achievements: [
-      'Hackathon Winner - TechFest 2024',
-      'Dean\'s List',
-      'AWS Certified'
-    ]
-  });
+  const [portfolioData, setPortfolioData] = useState(null);
+  const [generatedFiles, setGeneratedFiles] = useState([]);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
 
-  const [generatedFiles, setGeneratedFiles] = useState([
-    { id: 1, name: 'Portfolio_Sarah_Johnson.pdf', size: '2.4 MB', date: '2024-02-15', type: 'pdf' },
-    { id: 2, name: 'Portfolio_QR_Code.png', size: '125 KB', date: '2024-02-15', type: 'qr' }
-  ]);
+  useEffect(() => {
+    // Get user from localStorage
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      setUser(userData);
+      fetchPortfolioData(userData.user1Id || userData._id);
+    }
+  }, []);
 
-  const handleGeneratePDF = () => {
+  const fetchPortfolioData = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/portfolio/${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setPortfolioData(data);
+      } else {
+        console.error('Failed to fetch portfolio data');
+      }
+    } catch (error) {
+      console.error('Error fetching portfolio data:', error);
+    }
+  };
+
+  const handleGeneratePDF = async () => {
+    if (!user) {
+      setError('User not found. Please login again.');
+      return;
+    }
+
     setIsGenerating(true);
-    setTimeout(() => {
-      const newFile = {
-        id: generatedFiles.length + 1,
-        name: `Portfolio_${portfolioData.name.replace(' ', '_')}_${Date.now()}.pdf`,
-        size: '2.4 MB',
-        date: new Date().toISOString().split('T')[0],
-        type: 'pdf'
-      };
-      setGeneratedFiles([...generatedFiles, newFile]);
+    setError(null);
+    
+    try {
+      const userId = user.user1Id || user._id;
+      const response = await fetch(`http://localhost:3001/api/portfolio/${userId}/pdf`);
+      
+      if (response.ok) {
+        // Create blob from response
+        const blob = await response.blob();
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${user.fullName?.replace(/\s+/g, '_')}_portfolio.pdf` || 'portfolio.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        // Add to generated files list
+        const newFile = {
+          id: Date.now(),
+          name: `${user.fullName?.replace(/\s+/g, '_')}_portfolio.pdf` || 'portfolio.pdf',
+          size: `${(blob.size / (1024 * 1024)).toFixed(1)} MB`,
+          date: new Date().toISOString().split('T')[0],
+          type: 'pdf'
+        };
+        setGeneratedFiles(prev => [newFile, ...prev]);
+        
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to generate PDF');
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      setError('An error occurred while generating PDF. Please try again.');
+    } finally {
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   const handleGenerateQR = () => {
     setIsGenerating(true);
+    // Mock QR generation for now
     setTimeout(() => {
       const newFile = {
-        id: generatedFiles.length + 1,
+        id: Date.now(),
         name: `Portfolio_QR_Code_${Date.now()}.png`,
         size: '125 KB',
         date: new Date().toISOString().split('T')[0],
         type: 'qr'
       };
-      setGeneratedFiles([...generatedFiles, newFile]);
+      setGeneratedFiles(prev => [newFile, ...prev]);
       setIsGenerating(false);
     }, 1500);
   };
@@ -68,6 +107,20 @@ const PortfolioGenerator = () => {
           <p>Create and manage your professional portfolio</p>
         </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="error-message" style={{
+          background: '#fee',
+          color: '#c00',
+          padding: '12px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          border: '1px solid #fcc'
+        }}>
+          {error}
+        </div>
+      )}
 
       <div className="portfolio-tabs">
         <button
@@ -170,58 +223,62 @@ const PortfolioGenerator = () => {
 
       {activeTab === 'preview' && (
         <div className="preview-section">
-          <div className="portfolio-preview">
-            <div className="preview-header">
-              <h2>{portfolioData.name}</h2>
-              <p>{portfolioData.role}</p>
-            </div>
+          {portfolioData && portfolioData.user ? (
+            <div className="portfolio-preview">
+              <div className="preview-header">
+                <h2>{portfolioData.user.fullName}</h2>
+                <p>{portfolioData.user.branch || 'Student'}</p>
+              </div>
 
-            <div className="preview-content">
-              <section className="preview-section-item">
-                <h3>About</h3>
-                <p>{portfolioData.bio}</p>
-              </section>
+              <div className="preview-content">
+                {portfolioData.portfolio?.profileSummary && (
+                  <section className="preview-section-item">
+                    <h3>Professional Summary</h3>
+                    <p>{portfolioData.portfolio.profileSummary}</p>
+                  </section>
+                )}
 
-              <section className="preview-section-item">
-                <h3>Contact Information</h3>
-                <div className="contact-grid">
-                  <p>📧 {portfolioData.email}</p>
-                  <p>📱 {portfolioData.phone}</p>
-                  <p>📍 {portfolioData.location}</p>
-                </div>
-              </section>
+                <section className="preview-section-item">
+                  <h3>Contact Information</h3>
+                  <div className="contact-grid">
+                    {portfolioData.user.email && <p>📧 {portfolioData.user.email}</p>}
+                    {portfolioData.user.phone && <p>📱 {portfolioData.user.phone}</p>}
+                    {portfolioData.user.location && <p>📍 {portfolioData.user.location}</p>}
+                    {portfolioData.user.linkedin && <p>🔗 {portfolioData.user.linkedin}</p>}
+                  </div>
+                </section>
 
-              <section className="preview-section-item">
-                <h3>Skills</h3>
-                <div className="skills-grid-preview">
-                  {portfolioData.skills.map((skill, idx) => (
-                    <span key={idx} className="skill-badge">{skill}</span>
-                  ))}
-                </div>
-              </section>
-
-              <section className="preview-section-item">
-                <h3>Projects</h3>
-                <div className="projects-list">
-                  {portfolioData.projects.map((project, idx) => (
-                    <div key={idx} className="project-item">
-                      <h4>{project.title}</h4>
-                      <p>{project.description}</p>
+                {portfolioData.user.skills && portfolioData.user.skills.length > 0 && (
+                  <section className="preview-section-item">
+                    <h3>Skills</h3>
+                    <div className="skills-grid-preview">
+                      {portfolioData.user.skills.map((skill, idx) => (
+                        <span key={idx} className="skill-badge">{skill}</span>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </section>
+                  </section>
+                )}
 
-              <section className="preview-section-item">
-                <h3>Achievements</h3>
-                <ul className="achievements-list">
-                  {portfolioData.achievements.map((achievement, idx) => (
-                    <li key={idx}>{achievement}</li>
-                  ))}
-                </ul>
-              </section>
+                {portfolioData.portfolio?.projects && portfolioData.portfolio.projects.length > 0 && (
+                  <section className="preview-section-item">
+                    <h3>Projects</h3>
+                    <div className="projects-list">
+                      {portfolioData.portfolio.projects.map((project, idx) => (
+                        <div key={idx} className="project-item">
+                          <h4>{project.title}</h4>
+                          <p>{project.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px' }}>
+              <p>Loading portfolio data...</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -243,11 +300,11 @@ const PortfolioGenerator = () => {
                     </div>
                   </div>
                   <div className="file-actions">
-                    <button className="action-btn view-btn">
-                      <Eye size={18} />
-                      View
-                    </button>
-                    <button className="action-btn download-btn">
+                    <button className="action-btn download-btn" onClick={() => {
+                      if (file.type === 'pdf') {
+                        handleGeneratePDF();
+                      }
+                    }}>
                       <Download size={18} />
                       Download
                     </button>

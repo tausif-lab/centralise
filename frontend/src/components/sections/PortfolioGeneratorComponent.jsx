@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/sections/portfolio.css';
 
-const PortfolioGenerator = ({ userId }) => {
+const PortfolioGenerator = ({ userId: propUserId }) => {
+  // Get userId from props or localStorage
+  const [userId, setUserId] = useState(null);
   const [portfolioData, setPortfolioData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +19,18 @@ const PortfolioGenerator = ({ userId }) => {
   });
   const [profileSummary, setProfileSummary] = useState('');
   const [editingBio, setEditingBio] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  // Initialize userId from props or localStorage
+  useEffect(() => {
+    if (propUserId) {
+      setUserId(propUserId);
+    } else {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      setUserId(user.user1Id || user._id);
+    }
+  }, [propUserId]);
 
   // Fetch portfolio data
   useEffect(() => {
@@ -40,12 +54,26 @@ const PortfolioGenerator = ({ userId }) => {
   // Add project
   const handleAddProject = async (e) => {
     e.preventDefault();
+    
+    if (!userId) {
+      setError('User ID not found. Please login again.');
+      return;
+    }
+    
+    if (!newProject.title || !newProject.description) {
+      setError('Please fill in required fields');
+      return;
+    }
+    
     try {
-      const response = await axios.post(`/api/portfolio/${userId}/projects`, newProject);
+      setError(null);
+      const response = await axios.post(`http://localhost:3001/api/portfolio/${userId}/projects`, newProject);
+      
       setPortfolioData({
         ...portfolioData,
         portfolio: response.data,
       });
+      
       setNewProject({
         title: '',
         description: '',
@@ -54,9 +82,14 @@ const PortfolioGenerator = ({ userId }) => {
         startDate: '',
         endDate: '',
       });
+      
+      setSuccess('Project added successfully!');
       setShowModal(false);
+      
+      setTimeout(() => setSuccess(null), 3000);
     } catch (error) {
       console.error('Error adding project:', error);
+      setError(error.response?.data?.message || 'Failed to add project');
     }
   };
 
@@ -142,6 +175,32 @@ const PortfolioGenerator = ({ userId }) => {
         </div>
       </div>
 
+      {/* Error and Success Messages */}
+      {error && (
+        <div style={{
+          background: '#fee',
+          color: '#c00',
+          padding: '12px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          border: '1px solid #fcc'
+        }}>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div style={{
+          background: '#efe',
+          color: '#060',
+          padding: '12px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          border: '1px solid #cfc'
+        }}>
+          {success}
+        </div>
+      )}
+
       <div className="portfolio-main">
         {/* Bio Section */}
         <div className="portfolio-section">
@@ -184,7 +243,9 @@ const PortfolioGenerator = ({ userId }) => {
           )}
         </div>
 
-        // Update the activity sections to show correct field names
+        {/* Activities Sections */}
+
+        {/* Internships & Training */}
 {activities?.internships?.length > 0 && (
   <div className="portfolio-section">
     <h3>Internships & Training</h3>
@@ -192,17 +253,22 @@ const PortfolioGenerator = ({ userId }) => {
       {activities.internships.map((activity) => (
         <div key={activity._id} className="activity-item">
           <h4>{activity.title}</h4>
-          <p><strong>Company:</strong> {activity.company}</p>
-          <p><strong>Location:</strong> {activity.location}</p>
-          <p><strong>Duration:</strong> {new Date(activity.date).toLocaleDateString()} - {activity.endDate ? new Date(activity.endDate).toLocaleDateString() : 'Present'}</p>
-          <p><strong>Description:</strong> {activity.description}</p>
+          <p><strong>Company:</strong> {activity.company || 'N/A'}</p>
+          <p><strong>Location:</strong> {activity.location || 'N/A'}</p>
+          <p><strong>Duration:</strong> {new Date(activity.date).toLocaleDateString()} 
+            {activity.endDate ? ` - ${new Date(activity.endDate).toLocaleDateString()}` : ' - Present'}
+          </p>
+          {activity.description && <p><strong>Description:</strong> {activity.description}</p>}
           <div className="verification-badge">
-            <strong>Verified by:</strong> {activity.approvedByFacultyId?.fullName}
-            <span className="faculty-id">(ID: {activity.approvedByFacultyId?.user1Id})</span>
+            <strong>✓ Verified by:</strong> {activity.approvedByFacultyId?.fullName || 'Faculty'}
+            {activity.approvedByFacultyId?.user1Id && (
+              <span className="faculty-id"> (ID: {activity.approvedByFacultyId.user1Id})</span>
+            )}
           </div>
           {activity.certificateUrl && (
-            <a href={activity.certificateUrl} className="cert-link" target="_blank" rel="noopener noreferrer">
-              View Certificate
+            <a href={activity.certificateUrl.startsWith('http') ? activity.certificateUrl : `http://localhost:3001${activity.certificateUrl}`} 
+               className="cert-link" target="_blank" rel="noopener noreferrer">
+              📄 View Certificate
             </a>
           )}
         </div>
@@ -211,55 +277,124 @@ const PortfolioGenerator = ({ userId }) => {
   </div>
 )}
 
-{/* Similar updates for certificates and accomplishments sections */}
-
-        {/* Certificates & Workshops */}
-        {activities?.certificates?.length > 0 && (
-          <div className="portfolio-section">
-            <h3>Certificates & Workshops</h3>
-            <div className="activities-list">
-              {activities.certificates.map((activity) => (
-                <div key={activity._id} className="activity-item">
-                  <h4>{activity.name}</h4>
-                  <p><strong>Organization:</strong> {activity.organization}</p>
-                  <p>
-                    <strong>Verified by:</strong> {activity.approvedByFacultyId?.name}
-                    {' '}(ID: {activity.approvedByFacultyId?._id})
-                  </p>
-                  {activity.certificateLink && (
-                    <a href={activity.certificateLink} className="cert-link" target="_blank" rel="noopener noreferrer">
-                      View Certificate
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
+{/* Workshops & Certifications */}
+{activities?.workshops?.length > 0 && (
+  <div className="portfolio-section">
+    <h3>Workshops & Certifications</h3>
+    <div className="activities-list">
+      {activities.workshops.map((activity) => (
+        <div key={activity._id} className="activity-item">
+          <h4>{activity.title}</h4>
+          <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
+          {activity.location && <p><strong>Location:</strong> {activity.location}</p>}
+          {activity.description && <p><strong>Description:</strong> {activity.description}</p>}
+          <div className="verification-badge">
+            <strong>✓ Verified by:</strong> {activity.approvedByFacultyId?.fullName || 'Faculty'}
+            {activity.approvedByFacultyId?.user1Id && (
+              <span className="faculty-id"> (ID: {activity.approvedByFacultyId.user1Id})</span>
+            )}
           </div>
-        )}
+          {activity.certificateUrl && (
+            <a href={activity.certificateUrl.startsWith('http') ? activity.certificateUrl : `http://localhost:3001${activity.certificateUrl}`} 
+               className="cert-link" target="_blank" rel="noopener noreferrer">
+              📄 View Certificate
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
-        {/* Accomplishments */}
-        {activities?.accomplishments?.length > 0 && (
-          <div className="portfolio-section">
-            <h3>Accomplishments</h3>
-            <div className="activities-list">
-              {activities.accomplishments.map((activity) => (
-                <div key={activity._id} className="activity-item">
-                  <h4>{activity.name}</h4>
-                  <p><strong>Category:</strong> {activity.category}</p>
-                  <p>
-                    <strong>Verified by:</strong> {activity.approvedByFacultyId?.name}
-                    {' '}(ID: {activity.approvedByFacultyId?._id})
-                  </p>
-                  {activity.certificateLink && (
-                    <a href={activity.certificateLink} className="cert-link" target="_blank" rel="noopener noreferrer">
-                      View Certificate
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
+{/* Hackathons */}
+{activities?.hackathons?.length > 0 && (
+  <div className="portfolio-section">
+    <h3>Hackathons & Competitions</h3>
+    <div className="activities-list">
+      {activities.hackathons.map((activity) => (
+        <div key={activity._id} className="activity-item">
+          <h4>{activity.title}</h4>
+          {activity.event && <p><strong>Event:</strong> {activity.event}</p>}
+          <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
+          {activity.location && <p><strong>Location:</strong> {activity.location}</p>}
+          {activity.description && <p><strong>Description:</strong> {activity.description}</p>}
+          <div className="verification-badge">
+            <strong>✓ Verified by:</strong> {activity.approvedByFacultyId?.fullName || 'Faculty'}
+            {activity.approvedByFacultyId?.user1Id && (
+              <span className="faculty-id"> (ID: {activity.approvedByFacultyId.user1Id})</span>
+            )}
           </div>
-        )}
+          {activity.certificateUrl && (
+            <a href={activity.certificateUrl.startsWith('http') ? activity.certificateUrl : `http://localhost:3001${activity.certificateUrl}`} 
+               className="cert-link" target="_blank" rel="noopener noreferrer">
+              📄 View Certificate
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+{/* Sports Achievements */}
+{activities?.sports?.length > 0 && (
+  <div className="portfolio-section">
+    <h3>Sports Achievements</h3>
+    <div className="activities-list">
+      {activities.sports.map((activity) => (
+        <div key={activity._id} className="activity-item">
+          <h4>{activity.title}</h4>
+          {activity.event && <p><strong>Event:</strong> {activity.event}</p>}
+          <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
+          {activity.location && <p><strong>Location:</strong> {activity.location}</p>}
+          {activity.description && <p><strong>Description:</strong> {activity.description}</p>}
+          <div className="verification-badge">
+            <strong>✓ Verified by:</strong> {activity.approvedByFacultyId?.fullName || 'Faculty'}
+            {activity.approvedByFacultyId?.user1Id && (
+              <span className="faculty-id"> (ID: {activity.approvedByFacultyId.user1Id})</span>
+            )}
+          </div>
+          {activity.certificateUrl && (
+            <a href={activity.certificateUrl.startsWith('http') ? activity.certificateUrl : `http://localhost:3001${activity.certificateUrl}`} 
+               className="cert-link" target="_blank" rel="noopener noreferrer">
+              📄 View Certificate
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+{/* Other Achievements */}
+{activities?.achievements?.length > 0 && (
+  <div className="portfolio-section">
+    <h3>Other Achievements</h3>
+    <div className="activities-list">
+      {activities.achievements.map((activity) => (
+        <div key={activity._id} className="activity-item">
+          <h4>{activity.title}</h4>
+          {activity.event && <p><strong>Event:</strong> {activity.event}</p>}
+          <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
+          {activity.location && <p><strong>Location:</strong> {activity.location}</p>}
+          {activity.description && <p><strong>Description:</strong> {activity.description}</p>}
+          <div className="verification-badge">
+            <strong>✓ Verified by:</strong> {activity.approvedByFacultyId?.fullName || 'Faculty'}
+            {activity.approvedByFacultyId?.user1Id && (
+              <span className="faculty-id"> (ID: {activity.approvedByFacultyId.user1Id})</span>
+            )}
+          </div>
+          {activity.certificateUrl && (
+            <a href={activity.certificateUrl.startsWith('http') ? activity.certificateUrl : `http://localhost:3001${activity.certificateUrl}`} 
+               className="cert-link" target="_blank" rel="noopener noreferrer">
+              📄 View Certificate
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
         {/* Projects Section */}
         <div className="portfolio-section">
@@ -425,16 +560,58 @@ const PortfolioGenerator = ({ userId }) => {
   );
 };
 
-// Portfolio Preview Component
+
+
 const PortfolioPreview = ({ user, portfolio, activities }) => {
   return (
     <div className="portfolio-preview-content">
       <div className="portfolio-preview-header">
-        <h1>{user?.name}</h1>
-        <p>{user?.branch}</p>
-        <p>{user?.email}</p>
-        <p>{user?.mobileNumber}</p>
+        <h1>{user?.fullName}</h1>
+        <p className="subtitle">{user?.branch}</p>
+        <div className="contact-info">
+          <p>📧 {user?.email}</p>
+          {user?.phone && <p>📱 {user?.phone}</p>}
+          {user?.location && <p>📍 {user?.location}</p>}
+        </div>
+        {/*<div className="social-links">
+          {user?.linkedin && (
+            <a href={user.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          )}
+          {user?.github && (
+            <a href={user.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+          )}
+        </div>*/}
+        <div className="social-links">
+  {user?.linkedin && (
+    <a href={user.linkedin.startsWith('http') ? user.linkedin : `https://${user.linkedin}`} 
+       target="_blank" rel="noopener noreferrer">
+      LinkedIn
+    </a>
+  )}
+  {user?.github && (
+    <a href={user.github.startsWith('http') ? user.github : `https://${user.github}`} 
+       target="_blank" rel="noopener noreferrer">
+      GitHub
+    </a>
+  )}
+</div>
       </div>
+
+      {/* Academic Info */}
+      <div className="preview-section">
+        <h2>Academic Information</h2>
+        <p><strong>University:</strong> {user?.collegeId}</p>
+        {user?.semester && <p><strong>Semester:</strong> {user.semester}</p>}
+        {user?.cgpa && <p><strong>CGPA:</strong> {user.cgpa}</p>}
+      </div>
+
+      {/* Skills */}
+      {user?.skills && user.skills.length > 0 && (
+        <div className="preview-section">
+          <h2>Technical Skills</h2>
+          <p>{user.skills.join(' • ')}</p>
+        </div>
+      )}
 
       {portfolio?.profileSummary && (
         <div className="preview-section">
@@ -443,54 +620,29 @@ const PortfolioPreview = ({ user, portfolio, activities }) => {
         </div>
       )}
 
+      {/* Update all activities sections similarly with proper field names */}
       {activities?.internships?.length > 0 && (
         <div className="preview-section">
           <h2>Internships & Training</h2>
           {activities.internships.map((activity) => (
             <div key={activity._id} className="preview-item">
-              <h3>{activity.name}</h3>
-              <p>Organization: {activity.organization}</p>
-              <p>Duration: {activity.duration}</p>
-              <p>
-                Verified by: {activity.approvedByFacultyId?.name}
-                {' '}(ID: {activity.approvedByFacultyId?._id})
+              <h3>{activity.title}</h3>
+              {activity.company && <p><strong>Company:</strong> {activity.company}</p>}
+              {activity.location && <p><strong>Location:</strong> {activity.location}</p>}
+              <p><strong>Duration:</strong> {new Date(activity.date).toLocaleDateString()}
+                {activity.endDate ? ` - ${new Date(activity.endDate).toLocaleDateString()}` : ' - Present'}
+              </p>
+              {activity.description && <p>{activity.description}</p>}
+              <p className="verified-by">
+                ✓ Verified by: {activity.approvedByFacultyId?.fullName || 'Faculty'}
+                {activity.approvedByFacultyId?.user1Id && ` (ID: ${activity.approvedByFacultyId.user1Id})`}
               </p>
             </div>
           ))}
         </div>
       )}
 
-      {activities?.certificates?.length > 0 && (
-        <div className="preview-section">
-          <h2>Certificates & Workshops</h2>
-          {activities.certificates.map((activity) => (
-            <div key={activity._id} className="preview-item">
-              <h3>{activity.name}</h3>
-              <p>Organization: {activity.organization}</p>
-              <p>
-                Verified by: {activity.approvedByFacultyId?.name}
-                {' '}(ID: {activity.approvedByFacultyId?._id})
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {activities?.accomplishments?.length > 0 && (
-        <div className="preview-section">
-          <h2>Accomplishments</h2>
-          {activities.accomplishments.map((activity) => (
-            <div key={activity._id} className="preview-item">
-              <h3>{activity.name}</h3>
-              <p>Category: {activity.category}</p>
-              <p>
-                Verified by: {activity.approvedByFacultyId?.name}
-                {' '}(ID: {activity.approvedByFacultyId?._id})
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Add similar sections for workshops, hackathons, sports, achievements */}
 
       {portfolio?.projects?.length > 0 && (
         <div className="preview-section">
@@ -499,9 +651,14 @@ const PortfolioPreview = ({ user, portfolio, activities }) => {
             <div key={project._id} className="preview-item">
               <h3>{project.title}</h3>
               <p>{project.description}</p>
-              {project.link && <p>Link: {project.link}</p>}
+              {project.link && <p><strong>Link:</strong> <a href={project.link} target="_blank" rel="noopener noreferrer">{project.link}</a></p>}
               {project.technologies?.length > 0 && (
-                <p>Technologies: {project.technologies.join(', ')}</p>
+                <p><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+              )}
+              {project.startDate && (
+                <p><strong>Duration:</strong> {new Date(project.startDate).toLocaleDateString()}
+                  {project.endDate ? ` - ${new Date(project.endDate).toLocaleDateString()}` : ' - Ongoing'}
+                </p>
               )}
             </div>
           ))}

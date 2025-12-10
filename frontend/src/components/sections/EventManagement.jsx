@@ -56,7 +56,7 @@ const [generatingReport, setGeneratingReport] = useState(false);
     setShowEventModal(false);
     console.log('Event submitted:', eventData);
   };
-  const generateReport = async () => {
+  /*const generateReport = async () => {
   if (!startDate || !endDate) {
     alert('Please select both start and end dates');
     return;
@@ -199,7 +199,288 @@ const [generatingReport, setGeneratingReport] = useState(false);
   } finally {
     setGeneratingReport(false);
   }
-};  
+};  */
+
+const generateReport = async () => {
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+
+  try {
+    setGeneratingReport(true);
+    
+    // Filter events between dates
+    const filteredEvents = events.filter(event => {
+      const eventDate = new Date(event.date);
+      return eventDate >= new Date(startDate) && eventDate <= new Date(endDate);
+    });
+
+    if (filteredEvents.length === 0) {
+      alert('No events found in the selected date range');
+      setGeneratingReport(false);
+      return;
+    }
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pageWidth - (2 * margin);
+    let yPosition = margin;
+
+    // Helper function to check and add new page
+    const checkPageBreak = (requiredSpace = 20) => {
+      if (yPosition + requiredSpace > pageHeight - margin) {
+        pdf.addPage();
+        yPosition = margin;
+        return true;
+      }
+      return false;
+    };
+
+    // Helper function to load and convert image
+    const loadImage = async (url) => {
+      try {
+        const imgResponse = await fetch(`http://localhost:3001${url}`);
+        const imgBlob = await imgResponse.blob();
+        return await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(imgBlob);
+        });
+      } catch (error) {
+        console.error('Error loading image:', error);
+        return null;
+      }
+    };
+
+    // Add Cover Page
+    pdf.setFillColor(41, 128, 185);
+    pdf.rect(0, 0, pageWidth, 80, 'F');
+    
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(28);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('EVENT REPORT', pageWidth / 2, 40, { align: 'center' });
+    
+    pdf.setFontSize(14);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(`${formatDate(startDate)} - ${formatDate(endDate)}`, pageWidth / 2, 55, { align: 'center' });
+    
+    pdf.setTextColor(0, 0, 0);
+    yPosition = 100;
+
+    // Summary Box
+    pdf.setFillColor(240, 248, 255);
+    pdf.roundedRect(margin, yPosition, contentWidth, 40, 3, 3, 'F');
+    
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Report Summary', margin + 5, yPosition + 10);
+    
+    pdf.setFontSize(10);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(`Total Events: ${filteredEvents.length}`, margin + 5, yPosition + 20);
+    pdf.text(`Period: ${formatDate(startDate)} to ${formatDate(endDate)}`, margin + 5, yPosition + 28);
+    pdf.text(`Generated on: ${formatDate(new Date())}`, margin + 5, yPosition + 36);
+    
+    yPosition += 50;
+
+    // Process each event
+    for (let i = 0; i < filteredEvents.length; i++) {
+      const event = filteredEvents[i];
+      
+      // Start new page for each event
+      pdf.addPage();
+      yPosition = margin;
+
+      // Event Header with colored background
+      pdf.setFillColor(52, 152, 219);
+      pdf.rect(0, yPosition, pageWidth, 15, 'F');
+      
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(16);
+      pdf.setFont(undefined, 'bold');
+      pdf.text(`Event ${i + 1}: ${event.eventTitle}`, pageWidth / 2, yPosition + 10, { align: 'center' });
+      
+      pdf.setTextColor(0, 0, 0);
+      yPosition += 25;
+
+      // Event Details Section
+      pdf.setFillColor(245, 245, 245);
+      pdf.roundedRect(margin, yPosition, contentWidth, 70, 2, 2, 'F');
+      
+      yPosition += 8;
+      
+      const details = [
+        ['Event ID:', event.eventId || 'N/A'],
+        ['Type:', event.type],
+        ['Organizer:', event.organizer],
+        ['Date:', formatDate(event.date)],
+        ['Duration:', event.duration],
+        ['NAAC Category:', event.naacCategory],
+        ['Status:', event.verificationStatus]
+      ];
+
+      pdf.setFontSize(10);
+      details.forEach(([label, value]) => {
+        pdf.setFont(undefined, 'bold');
+        pdf.text(label, margin + 5, yPosition);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(String(value), margin + 45, yPosition);
+        yPosition += 7;
+      });
+
+      yPosition += 10;
+
+      // Event Report Section
+      if (event.eventReport) {
+        checkPageBreak(30);
+        
+        pdf.setFillColor(255, 248, 220);
+        pdf.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+        
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Event Report:', margin + 5, yPosition + 6);
+        yPosition += 12;
+        
+        pdf.setFontSize(9);
+        pdf.setFont(undefined, 'normal');
+        const reportLines = pdf.splitTextToSize(event.eventReport, contentWidth - 10);
+        
+        reportLines.forEach(line => {
+          checkPageBreak(7);
+          pdf.text(line, margin + 5, yPosition);
+          yPosition += 5;
+        });
+        
+        yPosition += 8;
+      }
+
+      // Notice File Section
+      if (event.noticeFile && event.noticeFile.length > 0) {
+        checkPageBreak(50);
+        
+        pdf.setFillColor(220, 237, 200);
+        pdf.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+        
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Notice File:', margin + 5, yPosition + 6);
+        yPosition += 12;
+
+        const noticeFile = event.noticeFile[0];
+        const isImage = noticeFile.fileType && noticeFile.fileType.startsWith('image/');
+        
+        if (isImage) {
+          const base64 = await loadImage(noticeFile.url);
+          if (base64) {
+            checkPageBreak(100);
+            pdf.addImage(base64, 'JPEG', margin, yPosition, contentWidth, 80, undefined, 'FAST');
+            yPosition += 85;
+          }
+        } else {
+          pdf.setFontSize(9);
+          pdf.setFont(undefined, 'normal');
+          pdf.text(`File: ${noticeFile.filename}`, margin + 5, yPosition);
+          yPosition += 10;
+        }
+      }
+
+      // Attendance Sheet Section
+      if (event.attendanceSheet && event.attendanceSheet.length > 0) {
+        checkPageBreak(50);
+        
+        pdf.setFillColor(255, 229, 204);
+        pdf.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+        
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Attendance Sheet:', margin + 5, yPosition + 6);
+        yPosition += 12;
+
+        const attendanceFile = event.attendanceSheet[0];
+        const isImage = attendanceFile.fileType && attendanceFile.fileType.startsWith('image/');
+        
+        if (isImage) {
+          const base64 = await loadImage(attendanceFile.url);
+          if (base64) {
+            checkPageBreak(100);
+            pdf.addImage(base64, 'JPEG', margin, yPosition, contentWidth, 80, undefined, 'FAST');
+            yPosition += 85;
+          }
+        } else {
+          pdf.setFontSize(9);
+          pdf.setFont(undefined, 'normal');
+          pdf.text(`File: ${attendanceFile.filename}`, margin + 5, yPosition);
+          yPosition += 10;
+        }
+      }
+
+      // Event Photos Section
+      if (event.photos && event.photos.length > 0) {
+        checkPageBreak(20);
+        
+        pdf.setFillColor(230, 230, 250);
+        pdf.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+        
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text(`Event Photos (${event.photos.length}):`, margin + 5, yPosition + 6);
+        yPosition += 15;
+
+        for (let j = 0; j < event.photos.length; j++) {
+          const photo = event.photos[j];
+          const base64 = await loadImage(photo.url);
+          
+          if (base64) {
+            checkPageBreak(90);
+            
+            // Add photo with caption
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'italic');
+            pdf.text(`Photo ${j + 1}:`, margin, yPosition);
+            yPosition += 5;
+            
+            pdf.addImage(base64, 'JPEG', margin, yPosition, contentWidth, 70, undefined, 'FAST');
+            yPosition += 75;
+          }
+        }
+      }
+
+      // Add separator line between events
+      if (i < filteredEvents.length - 1) {
+        pdf.addPage();
+      }
+    }
+
+    // Add Footer on last page
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(8);
+      pdf.setTextColor(128, 128, 128);
+      pdf.text(
+        `Page ${i} of ${totalPages}`,
+        pageWidth / 2,
+        pageHeight - 10,
+        { align: 'center' }
+      );
+    }
+
+    // Save the PDF
+    pdf.save(`Event_Report_${startDate}_to_${endDate}.pdf`);
+    
+  } catch (error) {
+    console.error('Error generating report:', error);
+    alert('Error generating report. Please try again.');
+  } finally {
+    setGeneratingReport(false);
+  }
+};
 
 
 
