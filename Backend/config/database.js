@@ -6,8 +6,8 @@ const connectDB = async () => {
     const maxAttempts = 5;
     
     // Use environment variable or fallback to MongoDB Atlas
-   // const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Tausif:Tausifkhan@tausif.vwxb2hg.mongodb.net/Centralize?retryWrites=true&w=majority&appName=Tausif';
-   const MONGODB_URI = process.env.MONGODB_URI 
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Tausif:Tausifkhan@tausif.vwxb2hg.mongodb.net/Centralize?retryWrites=true&w=majority&appName=Tausif';
+   //const MONGODB_URI = process.env.MONGODB_URI 
 
     while (attempts < maxAttempts) {
         try {
