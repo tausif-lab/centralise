@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../config";
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaUsers, FaFileAlt, FaCalendarAlt, FaCog } from 'react-icons/fa';
@@ -36,7 +38,7 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
